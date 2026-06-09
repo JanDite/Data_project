@@ -570,7 +570,7 @@ When presenting results, it is recommended to always state:
 
 This pipeline was developed and adapted by:
 
-- **[@vavd01]**
-- **[@drahoslim]**
-- **[@JanDite]**
-- **[@vavd01]**
+- **[@vavd01](https://github.com/vavd01)**
+- **[@drahoslim](https://github.com/drahoslim)**
+- **[@JanDite](https://github.com/JanDite)**
+- **[@blav08](https://github.com/blav08)**
