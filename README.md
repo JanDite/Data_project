@@ -159,7 +159,7 @@ flowchart LR
 ## Project Structure
 
 ```text
-📁 Prvotni_analyza_parquet/
+📁 datovy_projekt/
 ├── upravena_pipeline_final.ipynb                # Final FIS variant for Azure OpenAI
 ├── dataset_4_sentiment.parquet                # Source student survey dataset
 ├── 📁 generated_reports/
