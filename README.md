@@ -1,4 +1,4 @@
-# Student Survey Analytics Pipeline - KIZI School Jupyter
+# Student Survey Analytics Pipeline - Final FIS School Jupyter
 
 **Local processing, trend analysis, and automated reporting of student surveys with the school Azure OpenAI API**
 
@@ -42,15 +42,15 @@
 
 ## Project Overview
 
-This document describes the notebook [`upravena_pipeline_v7_KIZI_skolni_v2.ipynb`](upravena_pipeline_v7_KIZI_skolni_v2.ipynb).
+This document describes the notebook [`upravena_pipeline_final.ipynb`](upravena_pipeline_final.ipynb).
 
 The notebook is based on the main analytics pipeline described in [`README.md`](README.md), but it has been adapted for the school Jupyter server and the school Azure OpenAI API. Data processing, trend calculations, risk indicators, and exports remain local and reproducible. Azure OpenAI is used only inside the `call_gpt` function to generate narrative summaries from prepared inputs.
 
-This variant focuses on all courses guaranteed by the `KIZI` department. The notebook automatically selects courses using the `garantujici_pracoviste_predmetu` column, creates reports for courses with a sufficient number of numeric responses, and prepares tables for Power BI.
+This final variant focuses on all courses belonging to the FIS faculty. The notebook automatically selects courses using `fakulta_predmetu = 40`, creates reports for courses with a sufficient number of numeric responses, and prepares tables for Power BI.
 
 Main outputs:
 
-- separate Markdown and PDF reports for included KIZI courses,
+- separate Markdown and PDF reports for included FIS courses,
 - numeric statistics, trends, and risk indicators,
 - text summaries generated through the school Azure OpenAI deployment,
 - CSV and XLSX exports prepared for Power BI,
@@ -75,7 +75,7 @@ An average score alone is often not enough to interpret teaching quality. The pi
 - local risk detection,
 - narrative summarization of prepared inputs.
 
-The goal of the school variant is to make the same analytical workflow runnable on the school Jupyter server, where using a `.env` file may not be possible. For that reason, the Azure OpenAI configuration is set directly in the first notebook cell using `os.environ`.
+The goal of the final FIS variant is to make the same analytical workflow runnable on the school Jupyter server, where using a `.env` file may not be possible. For that reason, the Azure OpenAI configuration is set directly in the first notebook cell using `os.environ`.
 
 ---
 
@@ -93,7 +93,7 @@ The goal of the school variant is to make the same analytical workflow runnable 
 
 ### Analytics Layer
 
-- selecting all courses guaranteed by the `KIZI` department,
+- selecting all courses belonging to the FIS faculty (`fakulta_predmetu = 40`),
 - statistics by course, question, teacher, and semester,
 - selecting the report semester `LS 2024/2025`,
 - comparison with the previous period,
@@ -122,14 +122,14 @@ The goal of the school variant is to make the same analytical workflow runnable 
 
 ## Differences from the Main Pipeline
 
-| Area | Main variant | School KIZI variant |
+| Area | Main variant | Final FIS variant |
 |---|---|---|
-| Notebook | `upravena_pipeline_v7_KIZI.ipynb` or the general `v7` variant | `upravena_pipeline_v7_KIZI_skolni_v2.ipynb` |
+| Notebook | general `v7` pipeline variant | `upravena_pipeline_final.ipynb` |
 | Environment | local Jupyter / custom environment | school Jupyter server |
 | API | personal OpenAI API or general configuration | school Azure OpenAI |
 | Key configuration | `.env`, environment variables, or `getpass` | first notebook cell |
 | Deployment | based on local configuration | `gpt-5-mini-4` in the Azure URL |
-| Target department | configurable | `TARGET_DEPARTMENT = "KIZI"` |
+| Target faculty | configurable | `TARGET_FACULTY_CODE = 40`, `TARGET_FACULTY_LABEL = "FIS"` |
 | `.env` | can be used | not used |
 
 Using the first cell instead of `.env` is intentional. On the school Jupyter server, creating files that start with a dot may be blocked or impractical because they are hidden files.
@@ -141,7 +141,7 @@ Using the first cell instead of `.env` is intentional. On the school Jupyter ser
 ```mermaid
 flowchart LR
     A[Parquet dataset] --> B[Structure validation]
-    B --> C[KIZI department filter]
+    B --> C[FIS faculty filter]
     C --> D[Text cleaning and numeric validation]
     D --> E[Historical periods]
     D --> F[Report semester]
@@ -165,7 +165,7 @@ flowchart LR
 
 | Layer | Responsibility |
 |---|---|
-| Local preprocessing | Data loading, cleaning, validation, KIZI filtering |
+| Local preprocessing | Data loading, cleaning, validation, FIS faculty filtering |
 | Local analytics | Aggregations, trends, risks, reliability |
 | Azure OpenAI | Narrative summarization of prepared inputs |
 | Reporting layer | Markdown, PDF, CSV/XLSX, and optional SQL export |
@@ -176,13 +176,13 @@ flowchart LR
 
 ```text
 📁 Prvotni_analyza_parquet/
-├── upravena_pipeline_v7_KIZI_skolni_v2.ipynb  # School KIZI variant for Azure OpenAI
+├── upravena_pipeline_final.ipynb                # Final FIS variant for Azure OpenAI
 ├── dataset_4_sentiment.parquet                # Source student survey dataset
 ├── 📁 generated_reports/
-│   └── 📁 kizi/
+│   └── 📁 fis/
 │       └── 📁 <report_period>/                   # Markdown and PDF reports
 ├── 📁 powerbi_sql_preview/
-│   └── 📁 kizi/
+│   └── 📁 fis/
 │       └── 📁 batch_<date>/                      # CSV/XLSX Power BI preview
 ├── README.md                                  # General 
 
@@ -213,7 +213,7 @@ For XLSX export, `openpyxl` may also be required. For optional Azure SQL export,
 
 ## Azure OpenAI Configuration
 
-The school variant does not use `.env`. The configuration is placed directly in the first notebook cell:
+The final FIS variant does not use `.env`. The configuration is placed directly in the first notebook cell:
 
 ```python
 import os
@@ -245,7 +245,7 @@ Changing only `AZURE_OPENAI_MODEL` is not enough. If the school deploys a differ
 Upload the following files to the working directory on the school Jupyter server:
 
 ```text
-upravena_pipeline_v7_KIZI_skolni_v2.ipynb
+upravena_pipeline_final.ipynb
 dataset_4_sentiment.parquet
 ```
 
@@ -254,7 +254,7 @@ dataset_4_sentiment.parquet
 Open:
 
 ```text
-upravena_pipeline_v7_KIZI_skolni_v2.ipynb
+upravena_pipeline_final.ipynb
 ```
 
 ### 3. Configure Azure OpenAI
@@ -284,10 +284,11 @@ Run the notebook cells sequentially from the beginning. If the installation cell
 
 ## Testing and Production Mode
 
-This variant is configured as a production-style run for the whole KIZI department:
+This variant is configured as a production-style run for the whole FIS faculty:
 
 ```python
-TARGET_DEPARTMENT = "KIZI"
+TARGET_FACULTY_CODE = 40
+TARGET_FACULTY_LABEL = "FIS"
 selected_obdobi = None
 report_obdobi = "LS 2024/2025"
 REPORT_MIN_RESPONSE_COUNT = 10
@@ -315,17 +316,18 @@ In offline mode, the API is not called. The `call_gpt` function returns a test p
 
 | Variable | Meaning | Default value |
 |---|---|---|
-| `TARGET_DEPARTMENT` | Department guaranteeing the courses | `KIZI` |
+| `TARGET_FACULTY_CODE` | Faculty code used for filtering courses | `40` |
+| `TARGET_FACULTY_LABEL` | Human-readable faculty label used in outputs | `FIS` |
 | `selected_obdobi` | Historical window for trend analysis | `None` = all available periods |
 | `report_obdobi` | Semester for detailed GPT summaries and reports | `LS 2024/2025` |
 | `REPORT_MIN_RESPONSE_COUNT` | Minimum numeric responses required for course inclusion | `10` |
 | `EXPORT_SQL_PREVIEW_FILES` | Save CSV/XLSX preview tables | `True` |
 | `EXPORT_TO_SQL` | Direct export to Azure SQL | `False` |
-| `SQL_PREVIEW_DIR` | Directory for Power BI preview | `powerbi_sql_preview/kizi` |
+| `SQL_PREVIEW_DIR` | Directory for Power BI preview | `powerbi_sql_preview/fis` |
 | `AZURE_OPENAI_MODEL` | Descriptive model name used by the wrapper | `gpt-5-mini` |
 | `OFFLINE_GPT` | Toggle for real API calls | `0` |
 
-The notebook is not configured as a single-course mode. It processes all courses in the `KIZI` department that meet the minimum response threshold.
+The notebook is not configured as a single-course mode. It processes all FIS courses that meet the minimum response threshold.
 
 ---
 
@@ -378,7 +380,7 @@ Indicators are analytical warnings, not automatic proof of a problem. They must 
 Reports are saved to:
 
 ```text
-generated_reports/kizi/<report_period>/
+generated_reports/fis/<report_period>/
 ```
 
 For each included course, the pipeline creates:
@@ -402,7 +404,7 @@ Each report contains:
 Local preview files are saved to:
 
 ```text
-powerbi_sql_preview/kizi/batch_<date>/
+powerbi_sql_preview/fis/batch_<date>/
 ```
 
 | Table | Content |
@@ -463,7 +465,7 @@ The project works with sensitive evaluation data. When using the pipeline, insti
 
 ### Implementation Principles
 
-- In this school variant, the API key is operationally set in the first notebook cell because `.env` may not work on the school server.
+- In this final FIS variant, the API key is operationally set in the first notebook cell because `.env` may not work on the school server.
 - A notebook with a filled-in key must not be shared publicly.
 - Before submission or publication, the key must be replaced with a placeholder.
 - Raw text responses are not exported to Power BI or Azure SQL as a separate table.
@@ -534,7 +536,7 @@ For a reproducible run, record:
 
 1. the input dataset version,
 2. the notebook execution date,
-3. the value of `TARGET_DEPARTMENT`,
+3. the value of `TARGET_FACULTY_CODE` and `TARGET_FACULTY_LABEL`,
 4. the value of `report_obdobi`,
 5. the value of `selected_obdobi`,
 6. the Azure deployment used,
@@ -558,13 +560,14 @@ The project is intended for analytical, research, and demonstration purposes in 
 
 When presenting results, it is recommended to always state:
 
-- the analyzed department,
+- the analyzed faculty,
 - the report period,
 - the number of responses,
 - the pipeline version used,
 - the Azure deployment used,
 - data limitations,
 - the fact that part of the text interpretation was generated by a generative model.
+
 
 ## Team & Contributors
 
