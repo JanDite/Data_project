@@ -158,6 +158,8 @@ flowchart LR
 
 ## Project Structure
 
+The structure below represents the project organization used on the university-managed Jupyter server during development and testing.
+
 ```text
 📁 datovy_projekt/
 ├── upravena_pipeline_final.ipynb                # Final FIS variant for Azure OpenAI
