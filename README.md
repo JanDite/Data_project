@@ -120,22 +120,6 @@ The goal of the final FIS variant is to make the same analytical workflow runnab
 
 ---
 
-## Differences from the Main Pipeline
-
-| Area | Main variant | Final FIS variant |
-|---|---|---|
-| Notebook | general `v7` pipeline variant | `upravena_pipeline_final.ipynb` |
-| Environment | local Jupyter / custom environment | school Jupyter server |
-| API | personal OpenAI API or general configuration | school Azure OpenAI |
-| Key configuration | `.env`, environment variables, or `getpass` | first notebook cell |
-| Deployment | based on local configuration | `gpt-5-mini-4` in the Azure URL |
-| Target faculty | configurable | `TARGET_FACULTY_CODE = 40`, `TARGET_FACULTY_LABEL = "FIS"` |
-| `.env` | can be used | not used |
-
-Using the first cell instead of `.env` is intentional. On the school Jupyter server, creating files that start with a dot may be blocked or impractical because they are hidden files.
-
----
-
 ## Pipeline Architecture
 
 ```mermaid
